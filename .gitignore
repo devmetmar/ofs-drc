@@ -12,6 +12,7 @@ inawaves/*
 !inawaves/WW3
 inawaves/WW3/*
 !inawaves/WW3/compile.sh
+!inawaves/WW3/compile.log
 !inawaves/WW3/VERSION
 !inawaves/WW3/model
 inawaves/WW3/model/*
