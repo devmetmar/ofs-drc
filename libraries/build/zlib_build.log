@@ -1,0 +1,71 @@
+Checking for shared library support...
+Building shared library libz.so.1.3.1 with mpiicc.
+Checking for size_t... Yes.
+Checking for off64_t... Yes.
+Checking for fseeko... Yes.
+Checking for strerror... Yes.
+Checking for unistd.h... Yes.
+Checking for stdarg.h... Yes.
+Checking whether to use vs[n]printf() or s[n]printf()... using vs[n]printf().
+Checking for vsnprintf() in stdio.h... Yes.
+Checking for return value of vsnprintf()... Yes.
+Checking for attribute(visibility) support... Yes.
+mpiicc -O3 -xHost -ipo -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN -I. -c -o example.o test/example.c
+mpiicc -O3 -xHost -ipo -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o adler32.o adler32.c
+mpiicc -O3 -xHost -ipo -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o crc32.o crc32.c
+mpiicc -O3 -xHost -ipo -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o deflate.o deflate.c
+mpiicc -O3 -xHost -ipo -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o infback.o infback.c
+mpiicc -O3 -xHost -ipo -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o inffast.o inffast.c
+mpiicc -O3 -xHost -ipo -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o inflate.o inflate.c
+mpiicc -O3 -xHost -ipo -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o inftrees.o inftrees.c
+mpiicc -O3 -xHost -ipo -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o trees.o trees.c
+mpiicc -O3 -xHost -ipo -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o zutil.o zutil.c
+mpiicc -O3 -xHost -ipo -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o compress.o compress.c
+mpiicc -O3 -xHost -ipo -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o uncompr.o uncompr.c
+mpiicc -O3 -xHost -ipo -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o gzclose.o gzclose.c
+mpiicc -O3 -xHost -ipo -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o gzlib.o gzlib.c
+mpiicc -O3 -xHost -ipo -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o gzread.o gzread.c
+mpiicc -O3 -xHost -ipo -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o gzwrite.o gzwrite.c
+mpiicc -O3 -xHost -ipo -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN -I. -c -o minigzip.o test/minigzip.c
+mpiicc -O3 -xHost -ipo -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/adler32.o adler32.c
+mpiicc -O3 -xHost -ipo -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/crc32.o crc32.c
+mpiicc -O3 -xHost -ipo -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/deflate.o deflate.c
+mpiicc -O3 -xHost -ipo -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/infback.o infback.c
+mpiicc -O3 -xHost -ipo -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/inffast.o inffast.c
+mpiicc -O3 -xHost -ipo -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/inflate.o inflate.c
+mpiicc -O3 -xHost -ipo -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/inftrees.o inftrees.c
+mpiicc -O3 -xHost -ipo -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/trees.o trees.c
+mpiicc -O3 -xHost -ipo -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/zutil.o zutil.c
+mpiicc -O3 -xHost -ipo -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/compress.o compress.c
+mpiicc -O3 -xHost -ipo -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/uncompr.o uncompr.c
+mpiicc -O3 -xHost -ipo -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/gzclose.o gzclose.c
+mpiicc -O3 -xHost -ipo -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/gzlib.o gzlib.c
+mpiicc -O3 -xHost -ipo -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/gzread.o gzread.c
+mpiicc -O3 -xHost -ipo -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN -I. -D_FILE_OFFSET_BITS=64 -c -o example64.o test/example.c
+mpiicc -O3 -xHost -ipo -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN -I. -D_FILE_OFFSET_BITS=64 -c -o minigzip64.o test/minigzip.c
+mpiicc -O3 -xHost -ipo -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/gzwrite.o gzwrite.c
+ar rc libz.a adler32.o crc32.o deflate.o infback.o inffast.o inflate.o inftrees.o trees.o zutil.o compress.o uncompr.o gzclose.o gzlib.o gzread.o gzwrite.o 
+mpiicc -O3 -xHost -ipo -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -o example example.o -L. libz.a
+mpiicc -O3 -xHost -ipo -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -o minigzip minigzip.o -L. libz.a
+mpiicc -shared -Wl,-soname,libz.so.1,--version-script,zlib.map -O3 -xHost -ipo -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN -o libz.so.1.3.1 adler32.lo crc32.lo deflate.lo infback.lo inffast.lo inflate.lo inftrees.lo trees.lo zutil.lo compress.lo uncompr.lo gzclose.lo gzlib.lo gzread.lo gzwrite.lo  -lc 
+mpiicc -O3 -xHost -ipo -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -o example64 example64.o -L. libz.a
+mpiicc -O3 -xHost -ipo -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -o minigzip64 minigzip64.o -L. libz.a
+rm -f libz.so libz.so.1
+ln -s libz.so.1.3.1 libz.so
+ln -s libz.so.1.3.1 libz.so.1
+mpiicc -O3 -xHost -ipo -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN -o examplesh example.o  -L. libz.so.1.3.1
+mpiicc -O3 -xHost -ipo -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN -o minigzipsh minigzip.o  -L. libz.so.1.3.1
+rm -f /home/model-admin/ofs-prod/libraries/lib/libz.a
+cp libz.a /home/model-admin/ofs-prod/libraries/lib
+chmod 644 /home/model-admin/ofs-prod/libraries/lib/libz.a
+cp libz.so.1.3.1 /home/model-admin/ofs-prod/libraries/lib
+chmod 755 /home/model-admin/ofs-prod/libraries/lib/libz.so.1.3.1
+rm -f /home/model-admin/ofs-prod/libraries/share/man/man3/zlib.3
+cp zlib.3 /home/model-admin/ofs-prod/libraries/share/man/man3
+chmod 644 /home/model-admin/ofs-prod/libraries/share/man/man3/zlib.3
+rm -f /home/model-admin/ofs-prod/libraries/lib/pkgconfig/zlib.pc
+cp zlib.pc /home/model-admin/ofs-prod/libraries/lib/pkgconfig
+chmod 644 /home/model-admin/ofs-prod/libraries/lib/pkgconfig/zlib.pc
+rm -f /home/model-admin/ofs-prod/libraries/include/zlib.h /home/model-admin/ofs-prod/libraries/include/zconf.h
+cp zlib.h zconf.h /home/model-admin/ofs-prod/libraries/include
+chmod 644 /home/model-admin/ofs-prod/libraries/include/zlib.h /home/model-admin/ofs-prod/libraries/include/zconf.h
