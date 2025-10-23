@@ -1,0 +1,42 @@
+NOGRB TRKNC NC4 DIST MPI OMPG OMPH PR3 UQ FLX0 LN1 ST4 STAB0 NL1 BT4 DB1 MLIM TR0 BS0 IC0 IS0 REF1 WNT2 WNX1 RWND CRT1 CRX1 TIDE O0 O1 O2 O2a O2b O2c O3 MPRF
+
+; NOGRIB ➡️ No GRIB Package
+; TRKNC ➡️ Activates the NetCDF API in the wave system tracking post-processing program. Selecting TRKNC alone will generate NetCDF-3 files. Selecting both TRKNC and NC4 will generate NetCDF-4 files.
+
+; DIST ➡️ Distributed memory model, mandatory for OMPH
+; MPI ➡️ Message Passing Interface, mandatory for OMPH
+; OMPG ➡️ Mandatory for OMPH
+; OMPH ➡️ Hybrid parallelization: OMP & MPI
+
+; PR3 ➡️ Propagation schemes and GSE alleviation method: Higher-order schemes with Tolman (2002a) averaging technique
+; UQ ➡️ Third-order (UQ) propagation scheme
+; FLX0 ➡️ Flux computation No routine used; flux computation included in source terms
+; LN1 ➡️ Linear input: Cavaleri and Malanotte-Rizzoli with filter
+; ST4 ➡️ Sin + Sds: Ardhuin et al. 2010
+; STAB0 ➡️ Input and dissipation: No stability correction. Compatible with any source term (st) package. Including this switch has no effect.
+; NL1 ➡️ Discrete Interaction Approximation
+; BT4 ➡️ Sbot: SHOWEX bottom friction
+; DB1 ➡️ Sdb: Battjes and Janssen 1978
+; MLIM ➡️ Use Miche-style shallow water limiter of Eq. (3.71).
+; TR0 ➡️ No triad interactions used
+; BS0 ➡️ No bottom scattering used
+; IC0 ➡️ No damping by sea ice
+; IS0 ➡️ No scattering by sea ice.
+; REF1 ➡️ Enables reflection of shorelines and icebergs
+
+; WNT2 ➡️ Wind input time: Approximately quadratic interpolation
+; WNX1 ➡️ Wind input spatial: Approximately quadratic interpolation
+; RWND ➡️ Correct wind speed for current velocity.
+; CRT1 ➡️ Current input time: Linear interpolation
+; CRX1 ➡️ Current input spatial: Linear interpolation
+; TIDE ➡️ Enables tidal analysis: used for pre-processing of input files, run-time tidal prediction in ww3 shel or tidal prediction with ww3 prtide.
+
+; O0 ➡️ Output of namelists in grid preprocessor
+; O1 ➡️ Output of boundary points in grid preprocessor
+; O2 ➡️ Output of the grid point status map in grid preprocessor
+; O2a ➡️ Generation of land-sea mask file mask.ww3 in grid preprocessor
+; O2b ➡️ Output of obstruction map in grid preprocessor
+; O2c ➡️ Print status map in format as read by ww3 grid
+; O3 ➡️ Additional output in loop over fields in field preprocessor
+
+; MPRF ➡️ Profiling of individual models and nesting in ww3 multi.
