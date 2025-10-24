@@ -9,6 +9,7 @@ inaflows/*
 !inawaves/
 inawaves/*
 !inawaves/README.md
+!inawaves/pipe-inawaves.excalidraw
 !inawaves/WW3
 inawaves/WW3/*
 !inawaves/WW3/compile.sh
