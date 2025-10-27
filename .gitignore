@@ -9,6 +9,8 @@ inaflows/*
 !inawaves/
 inawaves/*
 !inawaves/README.md
+!inawaves/*.sh
+!inawaves/inawaves_init.log
 !inawaves/pipe-inawaves.excalidraw
 !inawaves/WW3
 inawaves/WW3/*
@@ -23,6 +25,21 @@ inawaves/WW3/model/bin/*
 inawaves/WW3/model/bin/*.sh
 !inawaves/WW3/model/bin/switch_OFS
 !inawaves/WW3/model/bin/README.md
+!inawaves/prep/
+inawaves/prep/*
+!inawaves/prep/*.sh
+!inawaves/prep/*.py
+!inawaves/prep/*.inp
+!inawaves/main/
+inawaves/main/*
+!inawaves/main/*.sh
+!inawaves/main/*.py
+!inawaves/main/*.inp
+!inawaves/post/
+inawaves/post/*
+!inawaves/post/*.sh
+!inawaves/post/*.py
+!inawaves/post/*.inp
 
 !libraries/
 libraries/*
