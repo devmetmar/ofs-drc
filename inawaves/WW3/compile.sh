@@ -27,9 +27,9 @@ export WW3DIR=/home/model-admin/ofs-prod/inawaves/WW3
 export nproc=32
 
 echo ">>> Setting compiler flags for AMD EPYC (Intel compiler)"
-export FFLAGS="-O3 -xCORE-AVX2 -fpp -fp-model precise -qopt-report=5 -qopt-report-phase=vec"
-export CFLAGS="-O3 -xCORE-AVX2"
-export CXXFLAGS="-O3 -xCORE-AVX2"
+export FFLAGS="-O3 -march=core-avx2 -fpp -fp-model precise -qopt-report=5 -qopt-report-phase=vec"
+export CFLAGS="-O3 -march=core-avx2"
+export CXXFLAGS="-O3 -march=core-avx2"
 
 echo ">>> Cloning and preparing WW3"
 if [ ! -d $WW3DIR ]; then
