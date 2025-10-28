@@ -1,4 +1,12 @@
 #!/bin/bash
+# 
+# IMPORTANT NOTES IN RUNNING SLURM ON DRC
+# - /data is not accessible from compute node
+# - Avoid running SLURM command in relation with accessing/linking to /data
+# 
+# Created in October 2025
+# Contact: suwignyo.prasetyo@bmkg.go.id
+
 set -e
 source /etc/profile.d/modules.sh
 module purge
@@ -98,12 +106,12 @@ logging "-----------------------------------------------------------------------
 
 # ${PYTHON} -u ${WDIR}/prep/grib2ww3.py -t 384 ${INDATA}/gfs ${INDATA}/gfs/w3g_gfs.txt archive ${NWDAY}${CYCLE} >> $log_file 2>&1
 
-rm -rf ${INDATA}/prep/wind.txt
-ln -sf ${INDATA}/gfs/w3g_gfs.txt ${WDIR}/prep/wind.txt
-ln -sf ${INDATA}/static/gfs/mod_def.ww3 ${WDIR}/prep/mod_def.ww3
+rm -rf ${WDIR}/prep/wind.txt
+rm -rf ${WDIR}/prep/mod_def*
+cp -f ${INDATA}/gfs/w3g_gfs.txt ${WDIR}/prep/wind.txt --verbose >> $log_file 2>&1 &
+cp -f ${INDATA}/static/gfs/mod_def.ww3 ${WDIR}/prep/mod_def.ww3 --verbose >> $log_file 2>&1 &
 cd ${WDIR}/prep
-${WDIR}/prep/ww3_prep >> $log_file 2>&1
-wait
+# srun --ntasks=1 --exclude=drc0 --exclusive ${WDIR}/prep/ww3_prep >> $log_file 2>&1
 cd ${WDIR}/main
 rm -rf ${WDIR}/main/wind.gfs
 ln -sf ${WDIR}/prep/wind.ww3 ${WDIR}/main/wind.gfs
@@ -113,108 +121,133 @@ logging "                           MODEL INTEGRATION                           
 logging "------------------------------------------------------------------------"
 cd ${WDIR}/main
 STime="${NWDAY} ${CYCLE}"
-Tmax=
 # ETime=`date +"%Y%m%d %H%M" -d "${STime} + 3Days"`
-ETime=`date +"%Y%m%d %H%M" -d "$STime + 16Days"`
+ETime=$(date +"%Y%m%d %H%M" -d "$STime + 16Days")
 # ResTime=`date +"%Y%m%d %H%M" -d "${STime} + 3Days"`
-ResTime=`date +"%Y%m%d %H%M" -d "$STime + 12Hour"`
+ResTime=$(date +"%Y%m%d %H%M" -d "$STime + 12Hour")
 
 logging "Start time $STime"
 logging "End time $ETime"
 logging "Restart time $ResTime"
 
-sed '
-    /tgl_start/s/tgl_start/'"$STime"'/
-    /tgl_end/s/tgl_end/'"$ETime"'/
-    /tgl_restart/s/tgl_restart/'"$ResTime"'/
-    ' ${INDATA}/templates/ww3_multi_gfs.inp > ${WDIR}/main/ww3_multi.inp
+sed "
+    s|tgl_start|${STime}|
+    s|tgl_end|${ETime}|
+    s|tgl_restart|${ResTime}|
+    s|tgl_restart|${ResTime}|
+    " "${INDATA}/templates/ww3_multi_gfs.inp" > "${WDIR}/main/ww3_multi.inp"
 
-logging "   Success editing ww3_multi.inp"
+if [ $? -eq 0 ]; then
+    logging "Success editing ww3_multi.inp"
+else
+    logging "Failed editing ww3_multi.inp"
+    exit 1
+fi
 
 logging "Removing old restart files ..."
 rm -rf ${WDIR}/main/restart*
 
-logging "Linking mod_def files ..."
-ln -sf ${INDATA}/static/gfs/mod_def.ww3 ${WDIR}/main/mod_def.gfs
-ln -sf ${INDATA}/static/global/mod_def.ww3 ${WDIR}/main/mod_def.global
-ln -sf ${INDATA}/static/reg/mod_def.ww3 ${WDIR}/main/mod_def.reg
-ln -sf ${INDATA}/static/sreg/mod_def.ww3 ${WDIR}/main/mod_def.sreg
-ln -sf ${INDATA}/static/hires/mod_def.ww3 ${WDIR}/main/mod_def.hires
-ln -sf ${INDATA}/static/points/mod_def.ww3 ${WDIR}/main/mod_def.points
+logging "Copying mod_def files ..."
+rm -rf ${WDIR}/main/mod_def*
+cp -f ${INDATA}/static/gfs/mod_def.ww3 ${WDIR}/main/mod_def.gfs --verbose >> $log_file 2>&1 &
+cp -f ${INDATA}/static/global/mod_def.ww3 ${WDIR}/main/mod_def.global --verbose >> $log_file 2>&1 &
+cp -f ${INDATA}/static/reg/mod_def.ww3 ${WDIR}/main/mod_def.reg --verbose >> $log_file 2>&1 &
+cp -f ${INDATA}/static/sreg/mod_def.ww3 ${WDIR}/main/mod_def.sreg --verbose >> $log_file 2>&1 &
+cp -f ${INDATA}/static/hires/mod_def.ww3 ${WDIR}/main/mod_def.hires --verbose >> $log_file 2>&1 &
+cp -f ${INDATA}/static/points/mod_def.ww3 ${WDIR}/main/mod_def.points --verbose >> $log_file 2>&1 &
 
-logging "Linking new recent restart files ..."
-ln -sf ${INDATA}/static/global/restart.ww3  ${WDIR}/main/restart.global >> $log_file 2>&1 &
-ln -sf ${INDATA}/static/reg/restart.ww3     ${WDIR}/main/restart.reg    >> $log_file 2>&1 &
-ln -sf ${INDATA}/static/sreg/restart.ww3    ${WDIR}/main/restart.sreg   >> $log_file 2>&1 &
-ln -sf ${INDATA}/static/hires/restart.ww3   ${WDIR}/main/restart.hires  >> $log_file 2>&1 &
+logging "Copying new recent restart files ..."
+rm -rf ${WDIR}/main/restart*
+cp -f ${INDATA}/static/global/restart.ww3  ${WDIR}/main/restart.global --verbose >> $log_file 2>&1 &
+cp -f ${INDATA}/static/reg/restart.ww3     ${WDIR}/main/restart.reg --verbose    >> $log_file 2>&1 &
+cp -f ${INDATA}/static/sreg/restart.ww3    ${WDIR}/main/restart.sreg --verbose   >> $log_file 2>&1 &
+cp -f ${INDATA}/static/hires/restart.ww3   ${WDIR}/main/restart.hires --verbose  >> $log_file 2>&1 &
 
-logging "Submitting job run_multi.sh ..."
-job_id=$(sbatch ${WDIR}/main/run_ww3multi.sh ${NWDAY}${CYCLE} | awk '{print $4}')
-logging "Job ID: $job_id"
+# logging "Submitting job run_multi.sh ..."
+# job_id=$(sbatch ${WDIR}/main/run_ww3multi.sh ${NWDAY}${CYCLE} | awk '{print $4}')
+# logging "Job ID: $job_id"
 
-sleep 10
+# sleep 10
 
-# Check if the job ID was captured successfully
-if [ -z "$job_id" ]; then
-    logging "Failed to submit the job."
-    exit 1
-fi
+# # Check if the job ID was captured successfully
+# if [ -z "$job_id" ]; then
+#     logging "Failed to submit the job."
+#     exit 1
+# fi
 
-while true; do
-    job_status=$(check_job_status $job_id)
-    logging "Job status: ${job_status}"  # Debug output
-    if [ "${job_status}" == "" ]; then
-        logging "ww3_multi job $job_id has completed."
-        break
-    fi
-    logging "ww3_multi job $job_id is still running. Checking again in 60 seconds..."
-    sleep 60
-done
+# while true; do
+#     job_status=$(check_job_status $job_id)
+#     logging "Job status: ${job_status}"  # Debug output
+#     if [ "${job_status}" == "" ]; then
+#         logging "ww3_multi job $job_id has completed."
+#         break
+#     fi
+#     logging "ww3_multi job $job_id is still running. Checking again in 60 seconds..."
+#     sleep 60
+# done
 
-logging "Model integration has finished."
-cat log.mww3 >> $log_file
+# logging "Model integration has finished."
+# cat log.mww3 >> $log_file
+# mv slurm* ${log_dir}
 
 logging "Moving restart files to each domain directory ..."
-mv ${WDIR}/main/restart001.global ${INDATA}/static/global/restart.ww3
-mv ${WDIR}/main/restart001.reg    ${INDATA}/static/reg/restart.ww3   
-mv ${WDIR}/main/restart001.sreg   ${INDATA}/static/sreg/restart.ww3  
-mv ${WDIR}/main/restart001.hires  ${INDATA}/static/hires/restart.ww3 
-
-mv slurm* ${log_dir}
+mv ${WDIR}/main/restart001.global ${INDATA}/static/global/restart.ww3 >> $log_file 2>&1 || logging "No global restart found, run cold start"
+mv ${WDIR}/main/restart001.reg    ${INDATA}/static/reg/restart.ww3 >> $log_file 2>&1 || logging "No reg restart found, run cold start"
+mv ${WDIR}/main/restart001.sreg   ${INDATA}/static/sreg/restart.ww3 >> $log_file 2>&1 || logging "No sreg restart found, run cold start"
+mv ${WDIR}/main/restart001.hires  ${INDATA}/static/hires/restart.ww3 >> $log_file 2>&1 || logging "No hires restart found, run cold start" 
 
 logging "------------------------------------------------------------------------"
 logging "                             POST PROCESSING                            "
 logging "------------------------------------------------------------------------"
+NCOUT=$OUDATA/nc/inawaves/$year/$month/$year$month$day
+TMPIMOUT=${WDIR}/post/$year$month$day$CYCLE
+IMOUT=$OUDATA/img/inawaves/$year/$month
+logging "NETCDF OUT    : ${NCOUT}"
+logging "IMG TEMP OUT  : ${TMPIMOUT}"
+logging "IMG FINAL OUT : ${IMOUT}"
+mkdir -p $NCOUT $TMPIMOUT $IMOUT
 cd ${WDIR}/post
-ln -sf ${WDIR}/WW3/model/bin/gx_outf ${WDIR}/post
-logging "Linking mod_def files ..."
-ln -sf ${INDATA}/static/global/mod_def.ww3 ${WDIR}/post/mod_def.global
-ln -sf ${INDATA}/static/reg/mod_def.ww3 ${WDIR}/post/mod_def.reg
-ln -sf ${INDATA}/static/sreg/mod_def.ww3 ${WDIR}/post/mod_def.sreg
-ln -sf ${INDATA}/static/hires/mod_def.ww3 ${WDIR}/post/mod_def.hires
+ln -sf ${WDIR}/WW3/model/bin/gx_outf ${WDIR}/post >> $log_file 2>&1
+
+logging "Linking mod_def and out_grd files ..."
+cp -f ${INDATA}/static/global/mod_def.ww3 ${WDIR}/post/mod_def.global --verbose >> $log_file 2>&1
+cp -f ${INDATA}/static/reg/mod_def.ww3 ${WDIR}/post/mod_def.reg --verbose >> $log_file 2>&1
+cp -f ${INDATA}/static/sreg/mod_def.ww3 ${WDIR}/post/mod_def.sreg --verbose >> $log_file 2>&1
+cp -f ${INDATA}/static/hires/mod_def.ww3 ${WDIR}/post/mod_def.hires --verbose >> $log_file 2>&1
+ln -sf ${WDIR}/main/out_grd* ${WDIR}/post >> $log_file 2>&1
 logging "                       CREATE GRADS OUTPUT SECTION                      "
 logging "------------------------------------------------------------------------"
-sed '
-    /tgl_start/s/tgl_start/'"${STime}"'/
-    ' ${INDATA}/templates/gx_outf_10d.inp > gx_outf.inp
-logging "Success editing gx_outf.inp"
-
+sed "
+    s|tgl_start|${STime}|
+    " "${INDATA}/templates/gx_outf_10d.inp" > gx_outf.inp
+if [ $? -eq 0 ]; then
+    logging "Success editing gx_outf.inp"
+else
+    logging "Failed editing gx_outf.inp"
+    exit 1
+fi
 logging "Run create_grads2.sh"
-${WDIR}/post/create_grads.sh >> $log_file 2>&1
+# srun --ntasks=1 --exclude=drc0 --exclusive ${WDIR}/post/create_grads.sh >> $log_file 2>&1
 
-wait
 logging "                        CONVERT GRADS TO NETCDF                         "
 logging "------------------------------------------------------------------------"
-srun --ntasks=1 ${PYTHON} ${WDIR}/post/grads2nc.py global --modelcycle ${NWDAY}${CYCLE} >> $log_file 2>&1 &
-srun --ntasks=1 ${PYTHON} ${WDIR}/post/grads2nc.py reg --modelcycle ${NWDAY}${CYCLE} >> $log_file 2>&1 &
-srun --ntasks=1 ${PYTHON} ${WDIR}/post/grads2nc.py hires --modelcycle ${NWDAY}${CYCLE} >> $log_file 2>&1 &
+cd ${WDIR}/post
+# srun --ntasks=1 ${PYTHON} ${WDIR}/post/grads2nc.py global --modelcycle ${NWDAY}${CYCLE} >> $log_file 2>&1 &
+# srun --ntasks=1 ${PYTHON} ${WDIR}/post/grads2nc.py reg --modelcycle ${NWDAY}${CYCLE} >> $log_file 2>&1 &
+# srun --ntasks=1 ${PYTHON} ${WDIR}/post/grads2nc.py hires --modelcycle ${NWDAY}${CYCLE} >> $log_file 2>&1 &
 wait
 
 logging "                               WW3 Plotting                             "
 logging "------------------------------------------------------------------------"
-srun --ntasks=1 --cpus-per-task=48 --exclude=drc0 --exclusive ${PYTHON} ${WDIR}/post/plotter.py inawaves ${NWDAY}${CYCLE} >> $log_file 2>&1
+${PYTHON} ${WDIR}/post/plotter.py inawaves ${NWDAY}${CYCLE}  --out_dir $TMPIMOUT >> $log_file 2>&1
+#srun --ntasks=1 --cpus-per-task=48 --exclude=drc0 --exclusive 
 logging "Successfully running plotter"
-wait
+
+logging "Moving NC files to $NCOUT ..."
+mv ${WDIR}/post/*nc $NCOUT >> $log_file 2>&1
+logging "Moving IMG files to $IMOUT ..."
+mv ${TMPIMOUT} $IMOUT >> $log_file 2>&1
+rm ${WDIR}/post/*nc
 
 end_time=$(date +%s)
 elapsed_time=$((end_time - start_time))
