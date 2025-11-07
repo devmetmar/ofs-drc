@@ -2,9 +2,8 @@
 !README.md
 !.gitignore
 
-!inaflows/
 inaflows/*
-!inaflows/README.md
+inaflows/README.md
 
 !inawaves/
 inawaves/*
