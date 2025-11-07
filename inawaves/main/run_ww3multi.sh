@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=WW3OFS
 #SBATCH --nodes=8
-#SBATCH --time=10:00:00
+#SBATCH --time=01:00:00
 #SBATCH --ntasks-per-node=12
 #SBATCH --cpus-per-task=8
 #SBATCH --export=ALL
