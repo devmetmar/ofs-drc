@@ -8,11 +8,11 @@
 # Contact: tyo.suwignyo@gmail.com
 
 set -e
-source /etc/profile.d/modules.sh
-module purge
+source ${HOME}/.bashrc
+source ${HOME}/ofs-prod/inawaves/env.sh
+source ${HOME}/.auth/auth.sh
 module load mpi/2021.5.1
 module load compiler/2022.0.2
-source ${HOME}/ofs-prod/inawaves/env.sh
 start_time=$(date +%s)
 time_start=$(date --date "@${start_time}" +"%Y-%m-%d %H:%M:%S")
 send_telegram() {
