@@ -49,7 +49,7 @@ def run_plot(model, baserun, tsel, ds, var, area_name, out_dir, depth=None):
 
 def main(model, baserun:datetime, out_dir=False):
     timenow = datetime.utcnow()
-    log_dir = timenow.strftime(f"/home/model-admin/logs/%Y/%m/%Y%m%d")
+    log_dir = timenow.strftime(f"/home/model-admin/logs/inawaves/%Y/%m/%Y%m%d")
     log_file = timenow.strftime(f"{log_dir}/plotting_{model}_%Y%m%d_%H.log")
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
