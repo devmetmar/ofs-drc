@@ -1,4 +1,4 @@
-***REMOVED***
+#!/bin/bash
 #SBATCH --job-name=WW3OFS
 #SBATCH --nodes=8
 #SBATCH --time=01:00:00
