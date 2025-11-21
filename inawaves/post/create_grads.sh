@@ -1,4 +1,4 @@
-***REMOVED***
+#!/bin/bash
 
 set -euo pipefail
 

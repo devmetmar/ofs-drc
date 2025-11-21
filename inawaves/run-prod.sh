@@ -1,4 +1,4 @@
-***REMOVED***
+#!/bin/bash
 # 
 # IMPORTANT NOTES IN RUNNING SLURM ON DRC
 # - /data is not accessible from compute node

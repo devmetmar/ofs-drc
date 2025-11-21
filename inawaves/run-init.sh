@@ -1,4 +1,4 @@
-***REMOVED***
+#!/bin/bash
 module purge
 module load mpi/2021.5.1
 module load compiler/2022.0.2

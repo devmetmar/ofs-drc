@@ -1,4 +1,4 @@
-***REMOVED***
+#!/bin/bash
 # 
 # WW3 DRC COLD START WRAPPER SCRIPT
 #

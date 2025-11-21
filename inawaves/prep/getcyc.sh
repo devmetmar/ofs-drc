@@ -1,4 +1,4 @@
-***REMOVED***
+#!/bin/bash
 # Desc    : script library to define last GFS cycle based on 
 #           now time
 # -----------------------------------------------------------------

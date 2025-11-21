@@ -1,4 +1,4 @@
-***REMOVED***
+#!/bin/bash
 set -e  # stop on first error
 set -o pipefail
 

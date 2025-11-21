@@ -6,7 +6,6 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --export=ALL
 #SBATCH --distribution=block:block
-#SBATCH --exclude=drc0
 #SBATCH --exclusive
 #SBATCH -o slurm_ww3ofs_%j.out
 
